@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Newyellow Seed Phrase Encrypter</title>
+    <script src="lib/jquery-3.7.0.min.js"></script>
+    <script src="lib/crypto-js.min.js"></script>
+    <link rel="stylesheet" href="lib/bootstrap.min.css">
+    <style>
+        body {
+            background-color: #EEE;
+        }
+
+        .NYFormDiv {
+            background-color: #FFF;
+
+            padding: 30px;
+            margin: 24px;
+            box-sizing: border-box;
+
+            border: 1px solid #BBB;
+            border-radius: 12px;
+
+            box-shadow: 0px 0px 12px #CCC;
+        }
+
+        .mb-3 {
+            margin-top: 24px;
+            margin-bottom: 24px;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <div class="row">
+            <div class="col-sm NYFormDiv">
+                <h2>加密</h2>
+                <form>
+                    <div class="mb-3">
+                        <label for="encrypt-content" class="form-label">內容</label>
+                        <textarea type="text" class="form-control" id="encrypt-content" rows="4"></textarea>
+                    </div>
+                    <div class="mb-3">
+                        <label for="encrypt-password" class="form-label">加密詞</label>
+                        <input type="password" class="form-control" id="encrypt-password">
+                        <input type="checkbox" id="encrypt-password-show"> <label for="encrypt-password-show">顯示密碼</label>
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="encrypt-result" class="form-label">加密結果</label>
+                        <textarea class="form-control" id="encrypt-result" rows="6"></textarea>
+                    </div>
+
+                    <div class="mb-3">
+                        <button id="encrypt-button" type="button" class="btn btn-primary">加密</button>
+                    </div>
+                </form>
+            </div>
+            <div class="col-sm NYFormDiv">
+                <h2>解密</h2>
+                <form>
+                    <div class="mb-3">
+                        <label for="decrypt-content" class="form-label">加密內容</label>
+                        <textarea type="text" class="form-control" id="decrypt-content" rows="4"></textarea>
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="decrypt-password" class="form-label">加密詞</label>
+                        <input type="password" class="form-control" id="decrypt-password">
+                        <input type="checkbox" id="decrypt-password-show"> <label for="decrypt-password-show">顯示密碼</label>
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="decrypt-result" class="form-label">解密結果</label>
+                        <textarea class="form-control" id="decrypt-result" rows="6"></textarea>
+                    </div>
+
+                    <div class="mb-3">
+                        <button id="decrypt-button" type="button" class="btn btn-primary">解密</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        window.onload = () => {
+            $('#encrypt-button').on('click', () => {
+                const content = $('#encrypt-content').val();
+                const password = $('#encrypt-password').val();
+                const encrypted = encrypt(content, password);
+                $('#encrypt-result').val(encrypted);
+            });
+
+            $('#decrypt-button').on('click', () => {
+                const content = $('#decrypt-content').val();
+                const password = $('#decrypt-password').val();
+                const decrypted = decrypt(content, password);
+                console.log(decrypted);
+                $('#decrypt-result').val(decrypted);
+            });
+
+            $('#encrypt-password-show').on('change', () => {
+                const checked = $('#encrypt-password-show').prop('checked');
+                if (checked) {
+                    $('#encrypt-password').attr('type', 'text');
+                } else {
+                    $('#encrypt-password').attr('type', 'password');
+                }
+            });
+
+            $('#decrypt-password-show').on('change', () => {
+                const checked = $('#decrypt-password-show').prop('checked');
+                if (checked) {
+                    $('#decrypt-password').attr('type', 'text');
+                } else {
+                    $('#decrypt-password').attr('type', 'password');
+                }
+            });
+        }
+
+        // 加密函數
+        function encrypt(content, passphrase) {
+            const encrypted = CryptoJS.AES.encrypt(content, passphrase).toString();
+            return encrypted;
+        }
+
+        // 解密函數
+        function decrypt(encryptedContent, passphrase) {
+            const decrypted = CryptoJS.AES.decrypt(encryptedContent, passphrase).toString(CryptoJS.enc.Utf8);
+            return decrypted;
+        }
+
+
+    </script>
+</body>
+
+</html>
